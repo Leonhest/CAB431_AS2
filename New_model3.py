@@ -6,7 +6,7 @@ from itertools import islice
 from B_Model1 import evaluate_ranking
 import re
 
-def B_Model3(query, stop_words, inputfolder):
+def New_Model3(query, stop_words, inputfolder):
 
     files = [f"./{inputfolder}/{file}" for file in os.listdir(inputfolder)] #Save all file paths within the input folder into array
     stemmer = PorterStemmer() 
@@ -199,7 +199,7 @@ if __name__ == '__main__':
                 metrics_f.write(fail_line + "\n")
                 continue
 
-            b_model3_scores = B_Model3(current_query_string, stop_words, input_folder_path)
+            b_model3_scores = New_Model3(current_query_string, stop_words, input_folder_path)
             
             # Output filenames within their respective subdirectories in results
             output_filename = os.path.join(output_dir_b_model3, f"B_Model3_{dataset_num}Ranking.dat")
