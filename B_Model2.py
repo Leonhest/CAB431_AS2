@@ -160,17 +160,9 @@ def B_Model2(query, stop_words, inputfolder):
         for q_term, q_freq in queryDict.items():
             f_qi_d = d_terms.get(q_term, 0)
             
-            prob_term_given_doc_model = 0.0
-            if d_size > 0:
-                prob_term_given_doc_model = f_qi_d / d_size
-            
             coll_freq_of_q_term = termSet.get(q_term, 0)
-
-            prob_term_given_coll_model = 0.0
-            if total_term_occurrences_in_collection > 0:
-                prob_term_given_coll_model = coll_freq_of_q_term / total_term_occurrences_in_collection
             
-            combined_prob = (1 - la) * prob_term_given_doc_model + la * prob_term_given_coll_model
+            combined_prob = (1 - la) * (f_qi_d / d_size) + la * (coll_freq_of_q_term / total_term_occurrences_in_collection)
             
             if combined_prob > 0:
                 score += math.log10(combined_prob)
