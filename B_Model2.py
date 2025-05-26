@@ -2,108 +2,9 @@ import math
 import os
 from nltk.stem import PorterStemmer
 import NewsItem
+from B_Model1 import evaluate_ranking
 import re
 
-def evaluate_ranking(system_ranking_file, relevance_judgments_file):
-    """
-    Evaluates a ranking system output against relevance judgments.
-
-    Parameters:
-    system_ranking_file (str): Path to the system's ranking output file.
-                               Format: doc_id score (one per line, ranked)
-    relevance_judgments_file (str): Path to the relevance judgments file.
-                                   Format: query_id doc_id relevance_score
-
-    Returns:
-    tuple: (average_precision, precision_at_10, dcg_at_10)
-           Returns (0,0,0) if files cannot be read or in case of errors.
-    """
-    try:
-        # Step 1: Read system ranking
-        ranked_doc_ids = []
-        with open(system_ranking_file, 'r') as f_rank:
-            for line in f_rank:
-                parts = line.strip().split()
-                if len(parts) >= 1: # Make sure there is at least a doc_id
-                    ranked_doc_ids.append(parts[0])
-
-        # Step 2: Read relevance judgements 
-        relevance = {} 
-        total_relevant_in_truth = 0
-        with open(relevance_judgments_file, 'r') as f_rel:
-            for line in f_rel:
-                parts = line.strip().split()
-                # Expecting: query_id doc_id relevance_score
-                if len(parts) >= 3:
-                    doc_id = parts[1]
-                    try:
-                        rel_score = int(parts[2])
-                        relevance[doc_id] = rel_score
-                        if rel_score > 0: # Assuming any score > 0 is relevant for counting total
-                            total_relevant_in_truth +=1
-                    except ValueError:
-                        print(f"Warning: Could not parse relevance score for {doc_id} in {relevance_judgments_file}")
-                        continue # Skip this line
-                else:
-                    print(f"Warning: Malformed line in {relevance_judgments_file}: {line.strip()}")
-
-
-        # Precision@10 
-        relevant_at_10 = 0
-        num_docs_to_check_p10 = min(10, len(ranked_doc_ids))
-        if num_docs_to_check_p10 > 0:
-            for i in range(num_docs_to_check_p10):
-                doc_id = ranked_doc_ids[i]
-                if relevance.get(doc_id, 0) > 0: # Assuming rel > 0 means relevant
-                    relevant_at_10 += 1
-            precision_at_10 = relevant_at_10 / float(num_docs_to_check_p10)
-        else:
-            precision_at_10 = 0.0
-
-
-        # Average Precision (AP)
-        ap_sum = 0.0
-        relevant_docs_found = 0
-        if total_relevant_in_truth == 0:
-             average_precision = 0.0
-        else:
-            for i in range(len(ranked_doc_ids)):
-                doc_id = ranked_doc_ids[i]
-                if relevance.get(doc_id, 0) > 0: # Assuming rel > 0 means relevant
-                    relevant_docs_found += 1
-                    precision_at_i = relevant_docs_found / (i + 1.0)
-                    ap_sum += precision_at_i
-            average_precision = (ap_sum / total_relevant_in_truth) if total_relevant_in_truth > 0 else 0.0
-
-        # Discounted Cumulative Gain @10 (DCG@10)
-        dcg_score = 0.0
-        num_ranked_docs = len(ranked_doc_ids)
-
-        if num_ranked_docs > 0 :
-            # DCG_1
-            doc_id_at_rank_1 = ranked_doc_ids[0]
-            rel_1 = float(relevance.get(doc_id_at_rank_1, 0)) # Use actual relevance score
-            dcg_score += rel_1
-
-            # DCG for ranks 2 to 10
-            p_cutoff = 10
-            effective_p = min(p_cutoff, num_ranked_docs)
-
-            for rank_i in range(2, effective_p + 1): 
-                doc_id_at_rank_i = ranked_doc_ids[rank_i - 1] 
-                rel_i = float(relevance.get(doc_id_at_rank_i, 0)) # Use actual relevance score
-                
-                if rel_i > 0: 
-                    dcg_score += rel_i / math.log2(rank_i) 
-
-        return average_precision, precision_at_10, dcg_score
-
-    except FileNotFoundError:
-        print(f"Error: Ranking or relevance file not found. Sys: {system_ranking_file}, Rel: {relevance_judgments_file}")
-        return 0.0, 0.0, 0.0
-    except Exception as e:
-        print(f"An error occurred during evaluation: {e} (Sys: {system_ranking_file}, Rel: {relevance_judgments_file})")
-        return 0.0, 0.0, 0.0
 
 def B_Model2(query, stop_words, inputfolder):
 
@@ -145,7 +46,7 @@ def B_Model2(query, stop_words, inputfolder):
 
     ####################################
     result = {}
-    total_term_occurrences_in_collection = sum(termSet.values())
+    C = sum(termSet.values())
     la = 0.2
 
     for docId, newsItem_obj in documentColl.items():
@@ -160,9 +61,9 @@ def B_Model2(query, stop_words, inputfolder):
         for q_term, q_freq in queryDict.items():
             f_qi_d = d_terms.get(q_term, 0)
             
-            coll_freq_of_q_term = termSet.get(q_term, 0)
+            c_qi = termSet.get(q_term, 0)
             
-            combined_prob = (1 - la) * (f_qi_d / d_size) + la * (coll_freq_of_q_term / total_term_occurrences_in_collection)
+            combined_prob = (1 - la) * (f_qi_d / d_size) + la * (c_qi / C)
             
             if combined_prob > 0:
                 score += math.log10(combined_prob)
