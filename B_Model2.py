@@ -44,7 +44,7 @@ def B_Model2(query, stop_words, inputfolder):
         documentColl[item.getNewsId()] = item
 
     ####################################ß
-    result = {}
+    results = {}
     termsSize = len(termSet)
     la = 0.2
 
@@ -52,7 +52,7 @@ def B_Model2(query, stop_words, inputfolder):
         d_terms = newsItem.get_termList()
         d_size = newsItem.getSize()
         score = 0
-        for q_term, freq in queryDict.items():
+        for q_term in queryDict.keys():
             try:
                 f_qi_d = d_terms[q_term]
             except:
@@ -60,9 +60,10 @@ def B_Model2(query, stop_words, inputfolder):
             
             score += math.log10((1-la)*(f_qi_d/d_size) + (la*(termSet[q_term]/termsSize)))
         
-        result[newsItem.getDocId()] = score
+        results[newsItem.getDocId()] = score
 
-    return result
+    results_sorted = dict(sorted(results.items(), key=lambda item: sum(item[1].values()), reverse=True))
+    return results_sorted
 
 
 if __name__ == '__main__':
