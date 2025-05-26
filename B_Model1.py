@@ -4,7 +4,7 @@ import Parser
 import os
 import re
 
-def obm25(coll, q_parsed):
+def b_model1(coll, q_parsed):
     """
     Calculate documents BM25 score in collection using Okapi BM25 formula.
 
@@ -182,11 +182,19 @@ if __name__ == '__main__':
     with open('Queries-2.txt', 'r') as f:
         queries_text = f.read()
 
-    if not os.path.exists("Outputs"):
-        os.makedirs("Outputs")
+    main_results_dir = "results"
+    if not os.path.exists(main_results_dir):
+        os.makedirs(main_results_dir)
+
+    # Changed directory names to reflect B_Model1
+    output_dir_b_model1 = os.path.join(main_results_dir, "Outputs_B_Model1")
+    output_dir_top10_b_model1 = os.path.join(main_results_dir, "Outputs_Top10_B_Model1")
+
+    if not os.path.exists(output_dir_b_model1):
+        os.makedirs(output_dir_b_model1)
     
-    if not os.path.exists("Outputs_Top10"):
-        os.makedirs("Outputs_Top10")
+    if not os.path.exists(output_dir_top10_b_model1):
+        os.makedirs(output_dir_top10_b_model1)
 
 
     all_ap = []
@@ -194,10 +202,10 @@ if __name__ == '__main__':
     all_dcg10 = []
     processed_query_count = 0
 
-    output_metrics_file = "evaluation_results.txt"
+    # Changed metrics file name to reflect B_Model1
+    output_metrics_file = os.path.join(main_results_dir, "evaluation_results_B_Model1.txt")
 
     with open(output_metrics_file, 'w') as metrics_f:
-        # Process each dataset
         for dataset_num in range(101, 151):
             dataset_folder = f"DataSets/Dataset{dataset_num}"
             
@@ -215,12 +223,13 @@ if __name__ == '__main__':
                 full_query = f"{query_title} {query_desc}"
                 parsed_query = Parser.Q_Parser(full_query, stop_words)
                 
-                bm25_scores_map = obm25(news_collection, parsed_query)
+                b_model1_scores_map = b_model1(news_collection, parsed_query)
                 
-                output_filename = f"Outputs/B_Model1_{dataset_num}Ranking.dat"
-                output_filename_top10 = f"Outputs_Top10/B_Model1_{dataset_num}Ranking_Top10.dat"
+                # Output filenames use the updated directory paths
+                output_filename = os.path.join(output_dir_b_model1, f"B_Model1_{dataset_num}Ranking.dat")
+                output_filename_top10 = os.path.join(output_dir_top10_b_model1, f"B_Model1_{dataset_num}Ranking_Top10.dat")
                 
-                sorted_docs = sorted(bm25_scores_map.items(), key=lambda item: item[1], reverse=True)
+                sorted_docs = sorted(b_model1_scores_map.items(), key=lambda item: item[1], reverse=True)
                 
                 with open(output_filename, 'w') as out_f:
                     for news_item_obj, score in sorted_docs:
@@ -279,5 +288,5 @@ if __name__ == '__main__':
             print(no_eval_line)
             metrics_f.write(no_eval_line + "\n")
 
-    print("\nProcessing complete. Output files are in 'Outputs' and 'Outputs_Top10' folders.")
+    print(f"\nProcessing complete. Output files are in '{main_results_dir}' directory.")
     print(f"Evaluation metrics also saved to {output_metrics_file}")
