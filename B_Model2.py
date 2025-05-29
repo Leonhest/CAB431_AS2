@@ -47,7 +47,7 @@ def B_Model2(query, stop_words, inputfolder):
     ####################################
     result = {}
     C = sum(termSet.values())
-    la = 0.2
+    la = 0.4
 
     for docId, newsItem_obj in documentColl.items():
         d_terms = newsItem_obj.get_termList()
