@@ -6,6 +6,8 @@ from itertools import islice
 from B_Model1 import evaluate_ranking
 import re
 
+
+
 def New_Model3(query, stop_words, inputfolder):
 
     files = [f"./{inputfolder}/{file}" for file in os.listdir(inputfolder)] #Save all file paths within the input folder into array
@@ -13,8 +15,7 @@ def New_Model3(query, stop_words, inputfolder):
     documentColl = {} #Collection of NewsItem objects
     termSet= {} #Set of all terms in document collection
     
-    queryDict = NewsItem.Assignment_1.Q_Parser(query, stop_words, stemmer)
-
+    queryDict = NewsItem.Assignment_1.Q_Parser(query, stop_words, stemmer) #Query document language
 
     for filename in files:
         item = NewsItem.NewsItem() #Initialize new NewsItem object
@@ -34,7 +35,7 @@ def New_Model3(query, stop_words, inputfolder):
 
                 if (not word in stop_words and len(word) > 2):
                     item.add_term(word)
-                    #term into big C
+                    #add term to collection
                     try:
                         termSet[word] += 1
                     except:
@@ -44,43 +45,41 @@ def New_Model3(query, stop_words, inputfolder):
 
         documentColl[item.getNewsId()] = item
 
-    ####################################
-    results = {}
-    C = sum(termSet.values())
-    la = 0.2
+    #Calculate Rank Score (First Pass)
+    results = {} #Dictionary to contain document scores
+    C = sum(termSet.values()) #Size of termset
+    mu = 1000 #Typical values of mu is 1000-2000 (play with value)
+    e = 1e-9
 
-    for docId, newsItem_obj in documentColl.items():
-        d_terms = newsItem_obj.get_termList()
-        d_size = newsItem_obj.getSize()
+    for docId, newsItem in documentColl.items():
+        d_terms = newsItem.get_termList()
+        d_size = newsItem.getSize()
         score = 0.0
 
-        if not queryDict:
-            results[docId] = score
-            continue
-
-        for q_term, q_freq in queryDict.items():
-            f_qi_d = d_terms.get(q_term, 0)
-            c_qi = termSet.get(q_term, 0)
+        for q_term in queryDict.keys():
+            f_qi_d = d_terms.get(q_term, 0.0)
             
-            combined_prob = (1 - la) * (f_qi_d / d_size if d_size > 0 else 0) + la * (c_qi / C if C > 0 else 0)
-            
-            if combined_prob > 0:
-                score += math.log10(combined_prob)
+            c_qi = termSet.get(q_term, 0.0)
 
+            numerator = f_qi_d + mu*(c_qi/C) + e
+            denominator = d_size + mu
+            score += math.log10((numerator/denominator))
+        
         results[docId] = score
 
+    sorted_results = dict(sorted(results.items(), key=lambda item: item[1], reverse=True))
+
     ## Step 5 top -k
-    k = 15 #k-value
+    k = 20 #k-value
     Set_C = {}
-    e = 1e-9 
     sorted_scores = sorted(results.items(), key=lambda item: item[1], reverse=True)
     Set_C = {}
     for docId, score in sorted_scores[:k]:
         Set_C[docId] = documentColl[docId]
 
     # step 6
-    temp_vocabulary_set = set() 
-    z = 10 #highest-probability words in doc (10-25 typical vaules)
+    temp_vocabulary_set = set() # Use a temporary set to collect unique terms
+    z = 5 #highest-probability words in doc (10-25 typical vaules)
 
     for docId, newsItem in Set_C.items():
         terms = newsItem.get_termList() 
@@ -97,47 +96,40 @@ def New_Model3(query, stop_words, inputfolder):
 
         for docId, newsItem in Set_C.items():
             terms = newsItem.get_termList()
-            doc_size = newsItem.getSize() 
+            doc_size = newsItem.getSize()
 
-            # P(w|D) for Step 7
-            pw_d = (terms.get(word, 0.0) + e) / doc_size if doc_size > 0 else e 
+            # P(w|D)
+            pw_d = (terms.get(word, 0.0) + e) / doc_size
 
-            # ∏ P(q_i|D) for Step 7
+            # ∏ P(q_i|D)
             query_product = 1.0
             for q_i in queryDict.keys():
-                pq_d = (terms.get(q_i, 0.0) + e) / doc_size if doc_size > 0 else e
+                pq_d = (terms.get(q_i, 0.0) + e) / doc_size
                 query_product *= pq_d
 
             score += pw_d * query_product
 
         relevance_model[word] = score
 
-    #step 8: Re-rank using Jelinek-Mercer
+    #step 8
     results = {}
 
     for docId, newsItem in documentColl.items():
         d_terms = newsItem.get_termList()
-        d_size = newsItem.getSize() 
-        current_doc_rerank_score = 0.0
+        d_size = newsItem.getSize()
+        score = 0.0
 
-        for term_v in vocabulary:
-            P_term_R = relevance_model.get(term_v, 0.0) # P(term|RelevanceModel)
-
-            if P_term_R == 0.0: # If P(term|R) is 0, this term contributes nothing
-                continue
-
-            # Get term frequencies for Jelinek-Mercer calculation
-            f_term_d = d_terms.get(term_v, 0.0)       # Frequency of term_v in current document d
-            c_term_coll = termSet.get(term_v, 0.0)  # Frequency of term_v in the entire collection
-
-            # Jelinek-Mercer smoothed probability P_jm(term_v|d)
-            jm_prob_term_d = (1 - la) * (f_term_d / d_size if d_size > 0 else 0) + \
-                             la * (c_term_coll / C if C > 0 else 0)
+        for q_term in vocabulary:
+            f_qi_d = d_terms.get(q_term, 0.0)
             
-            if jm_prob_term_d > 0:
-                current_doc_rerank_score += P_term_R * math.log10(jm_prob_term_d)
+            c_qi = termSet.get(q_term, 0.0)
+
+            numerator = f_qi_d + mu*(c_qi/C) + e
+            denominator = d_size + mu
+            
+            score += relevance_model[q_term] * math.log10((numerator/denominator))
         
-        results[docId] = current_doc_rerank_score
+        results[docId] = score
 
     return results
 
