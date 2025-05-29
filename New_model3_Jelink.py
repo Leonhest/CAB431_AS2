@@ -6,8 +6,6 @@ from itertools import islice
 from B_Model1 import evaluate_ranking
 import re
 
-
-
 def New_Model3(query, stop_words, inputfolder):
 
     files = [f"./{inputfolder}/{file}" for file in os.listdir(inputfolder)] #Save all file paths within the input folder into array
@@ -16,6 +14,7 @@ def New_Model3(query, stop_words, inputfolder):
     termSet= {} #Set of all terms in document collection
     
     queryDict = NewsItem.Assignment_1.Q_Parser(query, stop_words, stemmer) #Query document language
+
 
     for filename in files:
         item = NewsItem.NewsItem() #Initialize new NewsItem object
@@ -35,7 +34,7 @@ def New_Model3(query, stop_words, inputfolder):
 
                 if (not word in stop_words and len(word) > 2):
                     item.add_term(word)
-                    #add term to collection
+                    #term into big C
                     try:
                         termSet[word] += 1
                     except:
@@ -45,33 +44,37 @@ def New_Model3(query, stop_words, inputfolder):
 
         documentColl[item.getNewsId()] = item
 
-    #Calculate Rank Score (First Pass)
-    results = {} #Dictionary to contain document scores
-    C = sum(termSet.values()) #Size of termset
-    mu = 1000 #Typical values of mu is 1000-2000 (play with value)
-    e = 1e-9
+    ####################################
+    results = {}
+    C = sum(termSet.values())
+    la = 0.2
 
-    for docId, newsItem in documentColl.items():
-        d_terms = newsItem.get_termList()
-        d_size = newsItem.getSize()
+    for docId, newsItem_obj in documentColl.items():
+        d_terms = newsItem_obj.get_termList()
+        d_size = newsItem_obj.getSize()
         score = 0.0
 
-        for q_term in queryDict.keys():
-            f_qi_d = d_terms.get(q_term, 0.0)
-            
-            c_qi = termSet.get(q_term, 0.0)
+        if not queryDict:
+            results[docId] = score
+            continue
 
-            numerator = f_qi_d + mu*(c_qi/C) + e
-            denominator = d_size + mu
-            score += math.log10((numerator/denominator))
-        
+        for q_term, q_freq in queryDict.items():
+            f_qi_d = d_terms.get(q_term, 0)
+            
+            c_qi = termSet.get(q_term, 0)
+            
+            combined_prob = (1 - la) * (f_qi_d / d_size) + la * (c_qi / C)
+            
+            if combined_prob > 0:
+                score += math.log10(combined_prob)
+
         results[docId] = score
 
-    sorted_results = dict(sorted(results.items(), key=lambda item: item[1], reverse=True))
-
     ## Step 5 top -k
-    k = 20 #k-value
+    k = 5 #k-value
     Set_C = {}
+    e = 1e-9
+    mu = 1500
     sorted_scores = sorted(results.items(), key=lambda item: item[1], reverse=True)
     Set_C = {}
     for docId, score in sorted_scores[:k]:
