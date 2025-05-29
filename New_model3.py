@@ -212,15 +212,14 @@ if __name__ == '__main__':
             output_filename_top10 = os.path.join(output_dir_top10_b_model3, f"B_Model3_{dataset_num}Ranking_Top10.dat")
             
             sorted_docs = sorted(b_model3_scores.items(), key=lambda item: item[1], reverse=True)
-            
             with open(output_filename, 'w') as out_f:
                 for doc_id, score in sorted_docs:
-                    out_f.write(f"{doc_id} {score:.6f}\n") 
+                    out_f.write(f"{doc_id} {score:.6e}\n") 
 
             with open(output_filename_top10, 'w') as out_f_top10:
                 out_f_top10.write(f"QueryR{dataset_num} (DocID B_Model3_Score):\n")
                 for doc_id, score in sorted_docs[:10]:
-                    out_f_top10.write(f"{doc_id} {score:.6f}\n")
+                    out_f_top10.write(f"{doc_id} {score:.6e}\n")
 
             relevance_judgments_path = f"RelevanceJudgements/{dataset_folder_name}.txt"
             if os.path.exists(relevance_judgments_path):

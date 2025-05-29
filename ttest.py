@@ -134,61 +134,61 @@ Average Discounted Cumulative Gain@10 (DCG@10): 1.9884
 
 # --- Content from evaluation_results_B_Model3.txt ---
 content_b_model3 = """
-Query R101: AP=0.7687, P@10=0.5000, DCG@10=3.4871
-Query R102: AP=0.6085, P@10=0.6000, DCG@10=3.6330
-Query R103: AP=0.2239, P@10=0.2000, DCG@10=1.3333
-Query R104: AP=0.7101, P@10=0.6000, DCG@10=3.6750
-Query R105: AP=0.7993, P@10=0.8000, DCG@10=4.6380
-Query R106: AP=0.4104, P@10=0.2000, DCG@10=1.3562
-Query R107: AP=0.0786, P@10=0.0000, DCG@10=0.0000
-Query R108: AP=0.5913, P@10=0.2000, DCG@10=1.6309
-Query R109: AP=0.6323, P@10=0.7000, DCG@10=4.2188
-Query R110: AP=0.0838, P@10=0.0000, DCG@10=0.0000
+Query R101: AP=0.8056, P@10=0.5000, DCG@10=3.4464
+Query R102: AP=0.7533, P@10=0.9000, DCG@10=4.6236
+Query R103: AP=0.2916, P@10=0.3000, DCG@10=1.3626
+Query R104: AP=0.9051, P@10=1.0000, DCG@10=5.2545
+Query R105: AP=0.8846, P@10=0.9000, DCG@10=4.9390
+Query R106: AP=0.7245, P@10=0.3000, DCG@10=2.5000
+Query R107: AP=0.0817, P@10=0.0000, DCG@10=0.0000
+Query R108: AP=0.8095, P@10=0.3000, DCG@10=2.3562
+Query R109: AP=0.8134, P@10=0.9000, DCG@10=4.8676
+Query R110: AP=0.0447, P@10=0.0000, DCG@10=0.0000
 Query R111: AP=1.0000, P@10=0.3000, DCG@10=2.6309
-Query R112: AP=0.4994, P@10=0.4000, DCG@10=2.4485
-Query R113: AP=0.4971, P@10=0.4000, DCG@10=3.0178
-Query R114: AP=0.4722, P@10=0.3000, DCG@10=1.7461
-Query R115: AP=0.7037, P@10=0.2000, DCG@10=2.0000
-Query R116: AP=0.4506, P@10=0.4000, DCG@10=2.9643
-Query R117: AP=0.3769, P@10=0.2000, DCG@10=1.4307
-Query R118: AP=0.2257, P@10=0.2000, DCG@10=0.8869
-Query R119: AP=0.1935, P@10=0.1000, DCG@10=0.3562
-Query R120: AP=0.5229, P@10=0.4000, DCG@10=2.8010
-Query R121: AP=0.1355, P@10=0.0000, DCG@10=0.0000
-Query R122: AP=0.5018, P@10=0.5000, DCG@10=3.4320
-Query R123: AP=0.4053, P@10=0.1000, DCG@10=1.0000
-Query R124: AP=0.3083, P@10=0.1000, DCG@10=1.0000
-Query R125: AP=0.6813, P@10=0.6000, DCG@10=3.8771
-Query R126: AP=0.9853, P@10=1.0000, DCG@10=5.2545
-Query R127: AP=0.1993, P@10=0.2000, DCG@10=0.8175
-Query R128: AP=0.3144, P@10=0.1000, DCG@10=1.0000
-Query R129: AP=0.5347, P@10=0.6000, DCG@10=3.5808
-Query R130: AP=0.1880, P@10=0.1000, DCG@10=0.3869
-Query R131: AP=0.3885, P@10=0.2000, DCG@10=1.6309
-Query R132: AP=0.2116, P@10=0.1000, DCG@10=1.0000
-Query R133: AP=0.1919, P@10=0.1000, DCG@10=1.0000
-Query R134: AP=0.2498, P@10=0.1000, DCG@10=1.0000
-Query R135: AP=0.7151, P@10=0.7000, DCG@10=4.0071
-Query R136: AP=0.4376, P@10=0.3000, DCG@10=2.3562
-Query R137: AP=0.1917, P@10=0.1000, DCG@10=0.6309
-Query R138: AP=0.3492, P@10=0.2000, DCG@10=2.0000
-Query R139: AP=0.7143, P@10=0.2000, DCG@10=2.0000
-Query R140: AP=0.5521, P@10=0.6000, DCG@10=3.4892
-Query R141: AP=0.5455, P@10=0.6000, DCG@10=3.8511
-Query R142: AP=0.2339, P@10=0.1000, DCG@10=1.0000
-Query R143: AP=0.0634, P@10=0.0000, DCG@10=0.0000
-Query R144: AP=0.1544, P@10=0.0000, DCG@10=0.0000
-Query R145: AP=0.0540, P@10=0.0000, DCG@10=0.0000
-Query R146: AP=0.3448, P@10=0.1000, DCG@10=1.0000
-Query R147: AP=0.2797, P@10=0.2000, DCG@10=1.5000
-Query R148: AP=0.2772, P@10=0.0000, DCG@10=0.0000
-Query R149: AP=0.1971, P@10=0.1000, DCG@10=0.6309
-Query R150: AP=0.3429, P@10=0.3000, DCG@10=1.6572
+Query R112: AP=0.5917, P@10=0.5000, DCG@10=2.8626
+Query R113: AP=0.6893, P@10=0.7000, DCG@10=3.8225
+Query R114: AP=0.6019, P@10=0.3000, DCG@10=2.3155
+Query R115: AP=0.4606, P@10=0.1000, DCG@10=1.0000
+Query R116: AP=0.8654, P@10=1.0000, DCG@10=5.2545
+Query R117: AP=0.4111, P@10=0.3000, DCG@10=1.7461
+Query R118: AP=0.2167, P@10=0.1000, DCG@10=0.6309
+Query R119: AP=0.2222, P@10=0.3000, DCG@10=1.0033
+Query R120: AP=0.5471, P@10=0.4000, DCG@10=2.9464
+Query R121: AP=0.2137, P@10=0.0000, DCG@10=0.0000
+Query R122: AP=0.7207, P@10=0.7000, DCG@10=4.1215
+Query R123: AP=0.6667, P@10=0.3000, DCG@10=1.8869
+Query R124: AP=0.2910, P@10=0.1000, DCG@10=1.0000
+Query R125: AP=0.7406, P@10=0.7000, DCG@10=4.2818
+Query R126: AP=0.7457, P@10=0.8000, DCG@10=3.9212
+Query R127: AP=0.3618, P@10=0.2000, DCG@10=1.6309
+Query R128: AP=0.3811, P@10=0.2000, DCG@10=1.3333
+Query R129: AP=0.8757, P@10=0.9000, DCG@10=4.9535
+Query R130: AP=0.4444, P@10=0.3000, DCG@10=1.5178
+Query R131: AP=0.4208, P@10=0.2000, DCG@10=1.6309
+Query R132: AP=0.2247, P@10=0.1000, DCG@10=1.0000
+Query R133: AP=0.1855, P@10=0.2000, DCG@10=0.7869
+Query R134: AP=0.2503, P@10=0.1000, DCG@10=1.0000
+Query R135: AP=0.6207, P@10=0.5000, DCG@10=3.0764
+Query R136: AP=0.4621, P@10=0.3000, DCG@10=2.3333
+Query R137: AP=0.3366, P@10=0.2000, DCG@10=1.3869
+Query R138: AP=0.3450, P@10=0.2000, DCG@10=2.0000
+Query R139: AP=0.7778, P@10=0.3000, DCG@10=2.3155
+Query R140: AP=0.3612, P@10=0.3000, DCG@10=1.6165
+Query R141: AP=0.7642, P@10=0.9000, DCG@10=4.7545
+Query R142: AP=0.2976, P@10=0.2000, DCG@10=1.1309
+Query R143: AP=0.0529, P@10=0.0000, DCG@10=0.0000
+Query R144: AP=0.1458, P@10=0.1000, DCG@10=0.3155
+Query R145: AP=0.0444, P@10=0.0000, DCG@10=0.0000
+Query R146: AP=0.4085, P@10=0.2000, DCG@10=1.3010
+Query R147: AP=0.4072, P@10=0.3000, DCG@10=1.9643
+Query R148: AP=0.2939, P@10=0.0000, DCG@10=0.0000
+Query R149: AP=0.2196, P@10=0.1000, DCG@10=0.4307
+Query R150: AP=0.2621, P@10=0.2000, DCG@10=1.3869
 
 --- Overall Evaluation Results (B_Model3) ---
-Mean Average Precision (MAP): 0.4120
-Average Precision@10 (P@10): 0.2800
-Average Discounted Cumulative Gain@10 (DCG@10): 1.8671
+Mean Average Precision (MAP): 0.4808
+Average Precision@10 (P@10): 0.3540
+Average Discounted Cumulative Gain@10 (DCG@10): 2.1328
 
 """
 
@@ -220,7 +220,7 @@ for qid in query_ids:
 # Overall scores from the files
 overall_m1 = {"MAP": 0.4640, "P@10": 0.3760, "DCG@10": 2.0757}
 overall_m2 = {"MAP": 0.4516, "P@10": 0.3460, "DCG@10": 1.9884}
-overall_m3 = {"MAP": 0.3822, "P@10": 0.2420, "DCG@10": 1.6546}
+overall_m3 = {"MAP": 0.4808, "P@10": 0.3540, "DCG@10": 2.1328}
 
 print("Overall Performance:")
 df_overall = pd.DataFrame([overall_m1, overall_m2, overall_m3], index=["B_Model1", "B_Model2", "New_Model3"])
@@ -260,25 +260,25 @@ ttest_results.append({"Comparison": "B_Model1 vs B_Model2", "Metric": "DCG@10", 
 
 # B_Model1 vs New_Model3
 print("\n" + "-" * 30)
-print("Comparing B_Model1 and New_Model3")
+print("Comparing New_Model3 and B_Model1")
 print("-" * 30)
-t, p = perform_ttest(m1_ap, m3_ap, "B_Model1", "New_Model3", "AP (MAP)")
-ttest_results.append({"Comparison": "B_Model1 vs New_Model3", "Metric": "MAP", "T-statistic": t, "P-value": p})
-t, p = perform_ttest(m1_p10, m3_p10, "B_Model1", "New_Model3", "P@10")
-ttest_results.append({"Comparison": "B_Model1 vs New_Model3", "Metric": "P@10", "T-statistic": t, "P-value": p})
-t, p = perform_ttest(m1_dcg10, m3_dcg10, "B_Model1", "New_Model3", "DCG@10")
-ttest_results.append({"Comparison": "B_Model1 vs New_Model3", "Metric": "DCG@10", "T-statistic": t, "P-value": p})
+t, p = perform_ttest(m3_ap, m1_ap, "New_Model3", "B_Model1", "AP (MAP)")
+ttest_results.append({"Comparison": "New_Model3 vs B_Model1", "Metric": "MAP", "T-statistic": t, "P-value": p})
+t, p = perform_ttest(m3_p10, m1_p10, "New_Model3", "B_Model1", "P@10")
+ttest_results.append({"Comparison": "New_Model3 vs B_Model1", "Metric": "P@10", "T-statistic": t, "P-value": p})
+t, p = perform_ttest(m3_dcg10, m1_dcg10, "New_Model3", "B_Model1", "DCG@10")
+ttest_results.append({"Comparison": "New_Model3 vs B_Model1", "Metric": "DCG@10", "T-statistic": t, "P-value": p})
 
 # B_Model2 vs New_Model3
 print("\n" + "-" * 30)
-print("Comparing B_Model2 and New_Model3")
+print("Comparing New_Model3 and B_Model2")
 print("-" * 30)
-t, p = perform_ttest(m2_ap, m3_ap, "B_Model2", "New_Model3", "AP (MAP)")
-ttest_results.append({"Comparison": "B_Model2 vs New_Model3", "Metric": "MAP", "T-statistic": t, "P-value": p})
-t, p = perform_ttest(m2_p10, m3_p10, "B_Model2", "New_Model3", "P@10")
-ttest_results.append({"Comparison": "B_Model2 vs New_Model3", "Metric": "P@10", "T-statistic": t, "P-value": p})
-t, p = perform_ttest(m2_dcg10, m3_dcg10, "B_Model2", "New_Model3", "DCG@10")
-ttest_results.append({"Comparison": "B_Model2 vs New_Model3", "Metric": "DCG@10", "T-statistic": t, "P-value": p})
+t, p = perform_ttest(m3_ap, m2_ap, "New_Model3", "B_Model2", "AP (MAP)")
+ttest_results.append({"Comparison": "New_Model3 vs B_Model2", "Metric": "MAP", "T-statistic": t, "P-value": p})
+t, p = perform_ttest(m3_p10, m2_p10, "New_Model3", "B_Model2", "P@10")
+ttest_results.append({"Comparison": "New_Model3 vs B_Model2", "Metric": "P@10", "T-statistic": t, "P-value": p})
+t, p = perform_ttest(m3_dcg10, m2_dcg10, "New_Model3", "B_Model2", "DCG@10")
+ttest_results.append({"Comparison": "New_Model3 vs B_Model2", "Metric": "DCG@10", "T-statistic": t, "P-value": p})
 
 df_ttest_results = pd.DataFrame(ttest_results)
 print("\nSummary of t-test results:")

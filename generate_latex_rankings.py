@@ -50,7 +50,7 @@ def write_ranking_rows_for_query(f, query_id, ranking_data):
     f.write(query_header_row)
 
     for i, (doc_id, score) in enumerate(ranking_data):
-        f.write(f"{i+1} & {doc_id} & {score:.6f} \\\\\n") 
+        f.write(f"{i+1} & {doc_id} & {score:.6e} \\\\\n") 
 
 def main():
     if not os.path.exists(LATEX_OUTPUT_DIR):
