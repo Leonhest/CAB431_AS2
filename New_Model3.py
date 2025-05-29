@@ -68,8 +68,8 @@ def New_Model3(query, stop_words, inputfolder):
     sorted_results = dict(sorted(results.items(), key=lambda item: item[1], reverse=True))
 
     ## Step 5 top -k
-    a = 10 #k-value
-    Set_C = {k: v for i, (k, v) in enumerate(results.items()) if i < a}
+    k = 10 #k-value
+    Set_C = {a: b for i, (a, b) in enumerate(sorted_results.items()) if i < k}
 
     # step 6
     temp_vocabulary_set = set() # Use a temporary set to collect unique terms
@@ -97,7 +97,7 @@ def New_Model3(query, stop_words, inputfolder):
 
             # ∏ P(q_i|D)
             query_product = 1.0
-            for q_i in queryDict.values():
+            for q_i in queryDict.keys():
                 pq_d = (terms.get(q_i, 0.0) + e) / doc_size
                 query_product *= pq_d
 
