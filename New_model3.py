@@ -6,7 +6,20 @@ from itertools import islice
 from B_Model1 import evaluate_ranking
 import re
 
-def New_Model3(query, stop_words, inputfolder):
+def new_model3(query, stop_words, inputfolder):
+    """
+    Ranks documents using the psuedo-relevance feedback algorithm given a query
+
+    Parameters:
+    query (string): Sentence used to search for documents
+    stop_words (list of string): List of common english words
+    inputfolder (string): Path to folder containing the news item document dataset
+
+    Returns:
+    results (dict): Document frequencty dictionary
+        - keys (string): NewsItem ID
+        - values (float): Ranking score for the NewsItem.
+    """
 
     files = [f"./{inputfolder}/{file}" for file in os.listdir(inputfolder)] #Save all file paths within the input folder into array
     stemmer = PorterStemmer() 
@@ -14,7 +27,6 @@ def New_Model3(query, stop_words, inputfolder):
     termSet= {} #Set of all terms in document collection
     
     queryDict = NewsItem.Assignment_1.Q_Parser(query, stop_words, stemmer)
-
 
     for filename in files:
         item = NewsItem.NewsItem() #Initialize new NewsItem object
@@ -34,7 +46,7 @@ def New_Model3(query, stop_words, inputfolder):
 
                 if (not word in stop_words and len(word) > 2):
                     item.add_term(word)
-                    #term into big C
+                    #append term to termSet
                     try:
                         termSet[word] += 1
                     except:
@@ -44,14 +56,14 @@ def New_Model3(query, stop_words, inputfolder):
 
         documentColl[item.getNewsId()] = item
 
-    ####################################
-    results = {}
-    C = sum(termSet.values())
-    la = 0.2
+    #Calculate Rank Score (First Pass)
+    results = {} #Dictionary to contain document scores
+    C = sum(termSet.values()) #Size of termset
+    la = 0.2 #Lambda variable
 
     for docId, newsItem_obj in documentColl.items():
-        d_terms = newsItem_obj.get_termList()
-        d_size = newsItem_obj.getSize()
+        d_terms = newsItem_obj.get_termList() #List terms of document
+        d_size = newsItem_obj.getSize() #Size of document
         score = 0.0
 
         if not queryDict:
@@ -69,20 +81,20 @@ def New_Model3(query, stop_words, inputfolder):
 
         results[docId] = score
 
-    ## Step 5 top -k
+    results_sorted = sorted(results.items(), key=lambda item: item[1], reverse=True)
+
+    #Select top-k documents to create relevance model
     k = 15 #k-value
-    Set_C = {}
+    set_c = {} #dictionary to store top-k documents
     e = 1e-9 
-    sorted_scores = sorted(results.items(), key=lambda item: item[1], reverse=True)
-    Set_C = {}
-    for docId, score in sorted_scores[:k]:
-        Set_C[docId] = documentColl[docId]
+    for docId, score in results_sorted[:k]:
+        set_c[docId] = documentColl[docId]
 
-    # step 6
+    #Select top-z highest-probable words form set_c
     temp_vocabulary_set = set() 
-    z = 10 #highest-probability words in doc (10-25 typical vaules)
+    z = 10 #highest-probability words in doc variables (10-25 typical vaules)
 
-    for docId, newsItem in Set_C.items():
+    for docId, newsItem in set_c.items():
         terms = newsItem.get_termList() 
 
         first_z_word_keys = list(islice(terms.keys(), z))
@@ -90,19 +102,19 @@ def New_Model3(query, stop_words, inputfolder):
 
     vocabulary = list(temp_vocabulary_set) 
 
-    #step 7 Calculate the relevance model probabilities P (w|R)
+    #Calculate the relevance model probabilities P (w|R)
     relevance_model = {}
     for word in vocabulary:
         score = 0
 
-        for docId, newsItem in Set_C.items():
+        for docId, newsItem in set_c.items():
             terms = newsItem.get_termList()
             doc_size = newsItem.getSize() 
 
-            # P(w|D) for Step 7
+            # P(w|D)
             pw_d = (terms.get(word, 0.0) + e) / doc_size if doc_size > 0 else e 
 
-            # ∏ P(q_i|D) for Step 7
+            # ∏ P(q_i|D)
             query_product = 1.0
             for q_i in queryDict.keys():
                 pq_d = (terms.get(q_i, 0.0) + e) / doc_size if doc_size > 0 else e
@@ -112,8 +124,8 @@ def New_Model3(query, stop_words, inputfolder):
 
         relevance_model[word] = score
 
-    #step 8: Re-rank using Jelinek-Mercer
-    results = {}
+    #Re-rank using Jelinek-Mercer
+    results = {} #Dictionary to contain document scores
 
     for docId, newsItem in documentColl.items():
         d_terms = newsItem.get_termList()
@@ -205,7 +217,7 @@ if __name__ == '__main__':
                 metrics_f.write(fail_line + "\n")
                 continue
 
-            b_model3_scores = New_Model3(current_query_string, stop_words, input_folder_path)
+            b_model3_scores = new_model3(current_query_string, stop_words, input_folder_path)
             
             # Output filenames within their respective subdirectories in results
             output_filename = os.path.join(output_dir_b_model3, f"B_Model3_{dataset_num}Ranking.dat")

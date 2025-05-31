@@ -6,7 +6,20 @@ from B_Model1 import evaluate_ranking
 import re
 
 
-def B_Model2(query, stop_words, inputfolder):
+def b_model2(query, stop_words, inputfolder):
+    """
+    Ranks documents using the query liklihood algorithm given a query
+
+    Parameters:
+    query (string): Sentence used to search for documents
+    stop_words (list of string): List of common english words
+    inputfolder (string): Path to folder containing the news item document dataset
+
+    Returns:
+    results (dict): Document frequencty dictionary
+        - keys (string): NewsItem ID
+        - values (float): Ranking score for the NewsItem.
+    """
 
     files = [f"./{inputfolder}/{file}" for file in os.listdir(inputfolder)] #Save all file paths within the input folder into array
     stemmer = PorterStemmer() 
@@ -14,7 +27,6 @@ def B_Model2(query, stop_words, inputfolder):
     termSet= {} #Set of all terms in document collection
     
     queryDict = NewsItem.Assignment_1.Q_Parser(query, stop_words, stemmer) #Query document language
-
 
     for filename in files:
         item = NewsItem.NewsItem() #Initialize new NewsItem object
@@ -34,7 +46,7 @@ def B_Model2(query, stop_words, inputfolder):
 
                 if (not word in stop_words and len(word) > 2):
                     item.add_term(word)
-                    #term into big C
+                    #append term to termSet
                     try:
                         termSet[word] += 1
                     except:
@@ -44,21 +56,21 @@ def B_Model2(query, stop_words, inputfolder):
 
         documentColl[item.getNewsId()] = item
 
-    ####################################
-    result = {}
-    C = sum(termSet.values())
-    la = 0.4
+    #Calculate Rank Score
+    result = {} #Dictionary to contain document scores
+    C = sum(termSet.values()) #Size of termset
+    la = 0.4 #Lambda variable
 
     for docId, newsItem_obj in documentColl.items():
-        d_terms = newsItem_obj.get_termList()
-        d_size = newsItem_obj.getSize()
+        d_terms = newsItem_obj.get_termList() #List terms of document
+        d_size = newsItem_obj.getSize() #Size of document
         score = 0.0
 
         if not queryDict:
             result[docId] = score
             continue
 
-        for q_term, q_freq in queryDict.items():
+        for q_term in queryDict.keys():
             f_qi_d = d_terms.get(q_term, 0)
             
             c_qi = termSet.get(q_term, 0)
@@ -136,7 +148,7 @@ if __name__ == '__main__':
                 metrics_f.write(fail_line + "\n")
                 continue
 
-            b_model2_scores = B_Model2(current_query_string, stop_words, input_folder_path)
+            b_model2_scores = b_model2(current_query_string, stop_words, input_folder_path)
             
             # Output filenames within their respective subdirectories in results
             output_filename = os.path.join(output_dir_b_model2, f"B_Model2_{dataset_num}Ranking.dat")
